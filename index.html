@@ -50,6 +50,23 @@
         scroll-behavior: smooth;
     }
   </style>
+  <!-- [PERUBAHAN P3 & P4] CSS tambahan untuk stepper dan halaman baru. Semua class diawali "imk-" sehingga tidak mengganggu CSS asli. -->
+  <style>
+    .imk-view{padding:90px 0 60px;min-height:70vh}
+    .imk-steps{display:flex;list-style:none;padding:0;margin:0 0 28px}
+    .imk-steps li{flex:1;text-align:center;position:relative;font-size:13px;color:#98a6ad}
+    .imk-steps li:before{content:attr(data-n);display:block;width:34px;height:34px;line-height:34px;margin:0 auto 6px;border-radius:50%;background:#e4e6fc;color:#6777ef;font-weight:700;position:relative;z-index:1}
+    .imk-steps li:after{content:"";position:absolute;top:17px;left:-50%;width:100%;height:2px;background:#e4e6fc}
+    .imk-steps li:first-child:after{display:none}
+    .imk-steps li.active,.imk-steps li.done{color:#34395e}
+    .imk-steps li.active{font-weight:700}
+    .imk-steps li.active:before{background:#6777ef;color:#fff}
+    .imk-steps li.done:before{content:"\f00c";font-family:"Font Awesome 5 Free";font-weight:900;background:#47c363;color:#fff}
+    .imk-steps li.done:after,.imk-steps li.active:after{background:#6777ef}
+    .imk-opt{display:block;border:2px solid #e4e6fc;border-radius:8px;padding:12px 16px;margin-bottom:10px;cursor:pointer}
+    .imk-opt.sel{border-color:#6777ef;background:#f6f7ff}
+    @media(max-width:575px){.imk-steps li span{display:none}.imk-steps li.active span{display:block;position:absolute;left:0;right:0;top:40px}.imk-steps{margin-bottom:56px}}
+  </style>
 </head><title>SIBEA - Pendaftaran Beasiswa UNS</title>
 
 <body class="body-grey">
@@ -70,11 +87,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="https://sibea.integrasi.uns.ac.id">Beranda <span
+                        <a class="nav-link" href="https://sibea.integrasi.uns.ac.id" onclick="return go('beranda')">Beranda <span
                                 class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://sibea.integrasi.uns.ac.id/daftar-beasiswa">Beasiswa</a>
+                        <a class="nav-link" href="https://sibea.integrasi.uns.ac.id/daftar-beasiswa" onclick="return go('beranda','beasiswa-pendaftaran')">Beasiswa</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="goTentang()">Tentang</a>
@@ -84,6 +101,10 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://sibea.integrasi.uns.ac.id/unduh-dokumen">Unduhan</a>
+                    </li>
+                    <!-- [PERUBAHAN P4] Pintu masuk ke halaman Status dan Pencairan dari menu utama -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="return go('status')">Status dan Pencairan</a>
                     </li>
                 </ul>
                 
@@ -132,6 +153,8 @@
             flex: 1;
         }
     </style>
+<!-- Pembungkus tampilan Beranda (isi di dalamnya tetap asli) -->
+<div id="view-beranda">
 <div class="hero-sibea">
     <div class="container">
         <div class="row align-items-center">
@@ -230,16 +253,52 @@
     </div>
 </section>
 
-<section>
+<!-- [PERUBAHAN P2] id ditambahkan agar tombol "Lihat Penawaran" (toPenawaran) dan menu Beasiswa bisa menuju section ini -->
+<section id="beasiswa-pendaftaran">
     <div class="container">
     <div class="text-center mb-5">
                 <h2 data-aos="fade-up" data-aos-delay="100">Beasiswa Dalam Masa <span class="text-primary">Pendaftaran</span></h2>
                 <p data-aos="fade-up" data-aos-delay="600" class="lead">Daftarkan diri anda pada beasiswa yang sedang menerima pendaftaran</p>
             </div>
+            <!-- [PERUBAHAN P2] Kolom cari dan filter status pendaftaran serta penyelenggara -->
+            <div class="card border shadow-none mb-4">
+                <div class="card-body">
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-lg-5 mb-lg-0">
+                            <label for="cari-beasiswa" class="font-weight-bold">Cari Beasiswa</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-search"></i></span></div>
+                                <input type="search" id="cari-beasiswa" class="form-control" placeholder="Nama beasiswa, penyelenggara, atau kategori" oninput="filterBeasiswa()">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-6 mb-lg-0">
+                            <label for="f-status" class="font-weight-bold">Status Pendaftaran</label>
+                            <select id="f-status" class="form-control" onchange="filterBeasiswa()">
+                                <option value="">Semua</option>
+                                <option value="dibuka">Dibuka</option>
+                                <option value="ditutup">Ditutup</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3 col-6 mb-lg-0">
+                            <label for="f-penyelenggara" class="font-weight-bold">Penyelenggara</label>
+                            <select id="f-penyelenggara" class="form-control" onchange="filterBeasiswa()">
+                                <option value="">Semua</option>
+                                <option>Pemerintah Kabupaten Siak</option>
+                                <option>Pemerintah Kabupaten Sukoharjo</option>
+                                <option>BAZNAS Provinsi Jawa Tengah</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-1 mt-3 mt-lg-0">
+                            <button type="button" class="btn btn-light btn-block" onclick="resetFilter()" title="Atur ulang filter"><i class="fas fa-undo"></i></button>
+                        </div>
+                    </div>
+                    <p id="hasil-beasiswa" class="small text-muted mb-0 mt-3" aria-live="polite"></p>
+                </div>
+            </div>
             <div class="row">
                 
                     
-            <div class="col-xl-4 h-50">
+            <div class="col-xl-4 h-50" data-beasiswa data-status="dibuka" data-penyelenggara="Pemerintah Kabupaten Siak">
                 <div class="card ribbon-box border shadow-none mb-lg-0">
                     <div class="card-body text-muted">
                         
@@ -277,10 +336,11 @@
                                                                                                                                                                                                                                                                                                             </p>
 
                             <div class="mt-3">
-                                <a href="/pendaftar/penawaran/detail/149"
+                                <!-- [PERUBAHAN P3] Label "DAFTAR" menjadi "Ajukan Beasiswa", membuka alur pengajuan -->
+                                <a href="#" onclick="return ajukan('149')"
                                 class="btn btn-lg btn-primary btn-label w-100 text-white">
                                     <i class="far fas fa-check-double iconn"></i>
-                                    <span class="text">DAFTAR</span>
+                                    <span class="text">Ajukan Beasiswa</span>
                                 </a>
                             </div>
                         </div>
@@ -290,8 +350,7 @@
                     
                     
                     
-                    
-            <div class="col-xl-4 h-50">
+            <div class="col-xl-4 h-50" data-beasiswa data-status="dibuka" data-penyelenggara="Pemerintah Kabupaten Sukoharjo">
                 <div class="card ribbon-box border shadow-none mb-lg-0">
                     <div class="card-body text-muted">
                         
@@ -329,10 +388,10 @@
                                                                                                                                                                                                                                                                                                             </p>
 
                             <div class="mt-3">
-                                <a href="/pendaftar/penawaran/detail/146"
+                                <a href="#" onclick="return ajukan('146')"
                                 class="btn btn-lg btn-primary btn-label w-100 text-white">
                                     <i class="far fas fa-check-double iconn"></i>
-                                    <span class="text">DAFTAR</span>
+                                    <span class="text">Ajukan Beasiswa</span>
                                 </a>
                             </div>
                         </div>
@@ -342,7 +401,7 @@
                     
                     
                     
-            <div class="col-xl-4 h-50">
+            <div class="col-xl-4 h-50" data-beasiswa data-status="dibuka" data-penyelenggara="BAZNAS Provinsi Jawa Tengah">
                 <div class="card ribbon-box border shadow-none mb-lg-0">
                     <div class="card-body text-muted">
                         
@@ -380,124 +439,22 @@
                                                                                                                                                                                                                                                                                                             </p>
 
                             <div class="mt-3">
-                                <a href="/pendaftar/penawaran/detail/144"
+                                <a href="#" onclick="return ajukan('144')"
                                 class="btn btn-lg btn-primary btn-label w-100 text-white">
                                     <i class="far fas fa-check-double iconn"></i>
-                                    <span class="text">DAFTAR</span>
+                                    <span class="text">Ajukan Beasiswa</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-            
-    </div>
+                    <!-- [PERUBAHAN P2] Tampilan saat hasil pencarian/filter kosong -->
+                    <div id="kosong-beasiswa" class="col-12 text-center text-muted py-5" style="display:none">
+                        <p class="lead mb-2">Tidak ada beasiswa yang cocok dengan pencarian Anda.</p>
+                        <a href="#" onclick="resetFilter();return false">Atur ulang pencarian dan filter</a>
+                    </div>
+            </div>
 
     </div>
 </section>
@@ -518,8 +475,53 @@
         </div>
     </div>
 </section>
+</div>
+<!-- /view-beranda -->
 
+<!-- [PERUBAHAN P3] Alur pengajuan dengan stepper lima langkah -->
+<div id="view-pengajuan" class="imk-view" style="display:none">
+    <div class="container">
+        <div class="col-lg-9 mx-auto px-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent px-0">
+                    <li class="breadcrumb-item"><a href="#" onclick="return go('beranda')">Beranda</a></li>
+                    <li class="breadcrumb-item"><a href="#" onclick="return go('beranda','beasiswa-pendaftaran')">Beasiswa</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Ajukan Beasiswa</li>
+                </ol>
+            </nav>
+            <h2 class="mb-4">Formulir Pengajuan Beasiswa</h2>
+            <div class="card border shadow-none"><div class="card-body p-4" id="imk-flow"></div></div>
+        </div>
+    </div>
+</div>
 
+<!-- [PERUBAHAN P4] Halaman Status Pengajuan dan Jadwal Pencairan -->
+<div id="view-status" class="imk-view" style="display:none">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent px-0">
+                <li class="breadcrumb-item"><a href="#" onclick="return go('beranda')">Beranda</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Status dan Pencairan</li>
+            </ol>
+        </nav>
+        <h2 class="mb-4">Status dan Pencairan</h2>
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item"><a href="#" id="tab-status" class="nav-link active" onclick="tb('status');return false">Status Pengajuan</a></li>
+            <li class="nav-item"><a href="#" id="tab-cair" class="nav-link" onclick="tb('cair');return false">Jadwal Pencairan</a></li>
+        </ul>
+        <div id="pane-status"><div id="imk-status"></div></div>
+        <div id="pane-cair" style="display:none">
+            <div class="card border shadow-none"><div class="card-body table-responsive">
+                <table class="table mb-0">
+                    <thead><tr><th>Beasiswa</th><th>No. Pengajuan</th><th>Jadwal Pencairan</th><th>Status</th></tr></thead>
+                    <tbody id="imk-cair"></tbody>
+                </table>
+            </div></div>
+        </div>
+        <p class="small text-muted mt-3">Data pada halaman ini adalah contoh untuk prototype.</p>
+        <a href="#" class="btn btn-light mt-2" onclick="return go('beranda','beasiswa-pendaftaran')"><i class="fas fa-arrow-left"></i> Kembali ke Daftar Beasiswa</a>
+    </div>
+</div>
 
     <div class="img-footer">
     <img src="https://sibea.integrasi.uns.ac.id/stislaLanding/img/footerr.png" alt="" width="100%" class="flip-right">
@@ -611,6 +613,96 @@
         function toPenawaran(){
             document.getElementById('beasiswa-pendaftaran').scrollIntoView();
         }
+    </script>
+    <!-- [PERUBAHAN P2, P3, P4] Skrip prototype: filter daftar beasiswa, alur pengajuan, dan halaman status -->
+    <script>
+    var $i=function(i){return document.getElementById(i)},
+    K=['149','146','144'],
+    B={'149':{t:'PEMBERIAN BEASISWA UMUM BERPRESTASI UNTUK ANAK SIAK (BeTUNAS) KABUPATEN SIAK TAHUN ANGGARAN 2026',p:'29 September 2026 - 03 November 2026'},
+       '146':{t:'Pemberian Penghargaan bagi Pemuda Berprestasi Pemerintah Kabupaten Sukoharjo',p:'15 October 2026 - 05 November 2026'},
+       '144':{t:'BADAN AMIL ZAKAT NASIONAL (BAZNAS) PROVINSI JAWA TENGAH',p:'13 October 2026 - 11 November 2026'}},
+    D={nama:'Muhamad Nabil Fannani',nim:'L0124135',prodi:'Informatika'},
+    S={b:null,s:1,f:{},li:false,mode:'masuk',agree:false,done:false,sent:[],err:''},
+    ST=['Pilih Beasiswa','Masuk','Isi Biodata','Unggah Dokumen','Periksa & Kirim'],
+    NS=['Terkirim','Verifikasi Berkas','Seleksi','Pengumuman Hasil','Pencairan'],
+    NX=['Pengajuan Anda sudah diterima dan menunggu pemeriksaan oleh pengelola.','Berkas Anda sedang diperiksa pengelola. Pastikan email dan nomor HP Anda aktif.','Pengajuan Anda sedang dinilai oleh penyelenggara beasiswa.','Hasil seleksi sudah diumumkan. Jadwal pencairan akan diinformasikan.','Dana sedang diproses untuk dicairkan.'],
+    CT=[{id:'144',no:'SIBEA-144-20417',tgl:'20 Oktober 2026',st:1,c:1}];
+    function e(s){return String(s||'').replace(/[&<>"]/g,function(c){return '&#'+c.charCodeAt(0)+';'})}
+
+    /* Navigasi antar tampilan */
+    function go(v,a){
+        ['beranda','pengajuan','status'].forEach(function(x){$i('view-'+x).style.display=x==v?'':'none'});
+        var l=document.querySelectorAll('#navbarNav .navbar-nav:first-child>li'),n=a=='beasiswa-pendaftaran'?1:{beranda:0,pengajuan:1,status:5}[v];
+        for(var i=0;i<l.length;i++)l[i].classList.toggle('active',i==n);
+        if(v=='status'){tb('status');rs()}
+        var t=a&&$i(a);t?t.scrollIntoView():window.scrollTo(0,0);return false}
+
+    /* P2: pencarian dan filter */
+    function filterBeasiswa(){
+        var q=$i('cari-beasiswa').value.toLowerCase().trim(),s=$i('f-status').value,p=$i('f-penyelenggara').value,c=document.querySelectorAll('[data-beasiswa]'),n=0;
+        c.forEach(function(x){
+            var ok=(!q||(x.textContent+' '+x.dataset.penyelenggara).toLowerCase().indexOf(q)>-1)&&(!s||x.dataset.status==s)&&(!p||x.dataset.penyelenggara==p);
+            x.style.display=ok?'':'none';if(ok)n++});
+        $i('hasil-beasiswa').textContent='Menampilkan '+n+' dari '+c.length+' beasiswa';
+        $i('kosong-beasiswa').style.display=n?'none':''}
+    function resetFilter(){$i('cari-beasiswa').value=$i('f-status').value=$i('f-penyelenggara').value='';filterBeasiswa()}
+
+    /* P3: alur pengajuan */
+    function ajukan(id){S.b=id;S.s=1;S.done=false;S.agree=false;S.err='';S.f=Object.assign({},D);go('pengajuan');rp();return false}
+    function sv(){document.querySelectorAll('#imk-body [data-k]').forEach(function(x){S.f[x.dataset.k]=x.value})}
+    function fld(k,l,t){return '<div class="form-group"><label>'+l+'</label><input class="form-control" data-k="'+k+'" type="'+(t||'text')+'"></div>'}
+    function jmp(n){sv();S.err='';S.s=n;rp();return false}
+    function bk(){if(S.s==1)return go('beranda','beasiswa-pendaftaran');jmp(S.s-1)}
+    function nx(){
+        sv();var f=S.f;S.err='';
+        if(S.s==1&&!S.b)S.err='Pilih salah satu beasiswa untuk melanjutkan.';
+        if(S.s==2&&!S.li){
+            if(S.mode=='masuk'?!(f.u&&f.pw):!(f.an&&f.ae&&f.pw))S.err='Lengkapi semua kolom untuk melanjutkan.';else S.li=true}
+        if(!S.err)S.s++;rp()}
+
+    function s5(){
+        var m=0,R=[['nama','Nama Lengkap',3],['nim','NIM',3],['prodi','Program Studi',3],['email','Email',3],['hp','Nomor HP',3],['d1','Kartu Tanda Mahasiswa (KTM)',4],['d2','Transkrip Nilai',4],['d3','Surat Keterangan Aktif Kuliah',4]],
+        t='<h5>Periksa dan Kirim Pengajuan</h5><p class="text-muted">Pastikan semua data sudah benar sebelum dikirim.</p><table class="table table-sm"><tr><td class="text-muted">Beasiswa</td><td>'+B[S.b].t+'</td><td><a href="#" onclick="return jmp(1)">Ubah</a></td></tr>';
+        R.forEach(function(r){var v=S.f[r[0]];if(!v)m++;
+            t+='<tr><td class="text-muted">'+r[1]+'</td><td>'+(v?e(v):'<span class="text-danger"><i class="fas fa-exclamation-circle"></i> Belum diisi</span>')+'</td><td><a href="#" onclick="return jmp('+r[2]+')">Ubah</a></td></tr>'});
+        t+='</table>'+(m?'<div class="alert alert-warning">Masih ada '+m+' data yang belum lengkap. Klik "Ubah" pada baris yang ditandai.</div>':'')+
+        '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="agr"'+(S.agree?' checked':'')+' onchange="S.agree=this.checked;rp()"><label class="custom-control-label" for="agr">Saya menyatakan data dan dokumen sudah benar.</label></div>';
+        S.blk=m||!S.agree;return t}
+    function rp(){
+        var h='<ol class="imk-steps">',i,c,b='';
+        for(i=1;i<=5;i++){c=S.done||i<S.s?'done':i==S.s?'active':'';
+            h+='<li data-n="'+i+'" class="'+c+'"'+(c=='done'&&!S.done?' style="cursor:pointer" onclick="jmp('+i+')"':'')+'><span>'+ST[i-1]+'</span></li>'}
+        h+='</ol>';
+        if(S.done){
+            $i('imk-flow').innerHTML=h+'<div class="text-center py-4"><i class="fas fa-check-circle text-success" style="font-size:64px"></i><h4 class="mt-3">Pengajuan Berhasil Dikirim</h4><p class="text-muted">Nomor pengajuan <strong>'+S.sent[0].no+'</strong><br>'+B[S.sent[0].id].t+'</p><p>Pantau perkembangannya di halaman Status Pengajuan.</p><button class="btn btn-primary btn-lg" onclick="go(\'status\')">Lihat Status Pengajuan</button> <button class="btn btn-light btn-lg" onclick="go(\'beranda\',\'beasiswa-pendaftaran\')">Kembali ke Daftar Beasiswa</button></div>';return}
+        if(S.s==1){b='<h5>Pilih Beasiswa</h5><p class="text-muted">Pilih satu beasiswa yang ingin Anda ajukan.</p>'+K.map(function(k){
+            return '<label class="imk-opt'+(S.b==k?' sel':'')+'"><input type="radio" name="b" class="mr-2"'+(S.b==k?' checked':'')+' onchange="S.b=\''+k+'\';rp()"><strong>'+B[k].t+'</strong><div class="small text-muted ml-4">Pendaftaran: '+B[k].p+'</div></label>'}).join('')}
+        if(S.s==2){b=S.li?'<h5>Masuk</h5><div class="alert alert-success">Anda sudah masuk. Lanjutkan untuk mengisi biodata.</div>':
+            '<h5>'+(S.mode=='masuk'?'Masuk ke SIBEA':'Buat Akun SIBEA')+'</h5><p class="text-muted">'+(S.mode=='masuk'?'Masuk dengan akun Anda untuk melanjutkan pengajuan beasiswa.':'Buat akun baru untuk mengajukan beasiswa. Akun hanya dibuat satu kali.')+'</p>'+
+            (S.mode=='masuk'?fld('u','Email atau NIM'):fld('an','Nama Lengkap')+fld('ae','Email','email'))+fld('pw','Kata Sandi','password')+
+            '<a href="#" onclick="sv();S.mode=\''+(S.mode=='masuk'?'buat':'masuk')+'\';rp();return false">'+(S.mode=='masuk'?'Belum punya akun? Buat Akun':'Sudah punya akun? Masuk')+'</a>'}
+        if(S.s==3)b='<h5>Isi Biodata</h5><p class="text-muted">Periksa data Anda dan lengkapi kolom yang masih kosong.</p><div class="row"><div class="col-md-6">'+fld('nama','Nama Lengkap')+fld('nim','NIM')+fld('prodi','Program Studi')+'</div><div class="col-md-6">'+fld('email','Email','email')+fld('hp','Nomor HP','tel')+'</div></div>';
+        if(S.s==4)b='<h5>Unggah Dokumen</h5><p class="text-muted">Unggah semua dokumen persyaratan.</p>'+[['d1','Kartu Tanda Mahasiswa (KTM)'],['d2','Transkrip Nilai'],['d3','Surat Keterangan Aktif Kuliah']].map(function(d){
+            return '<div class="d-flex justify-content-between align-items-center border-bottom py-3"><div><strong>'+d[1]+'</strong><div class="small '+(S.f[d[0]]?'text-success':'text-muted')+'">'+(S.f[d[0]]?'<i class="fas fa-check"></i> '+e(S.f[d[0]]):'Belum diunggah')+'</div></div><label class="btn btn-outline-primary btn-sm mb-0">Pilih Berkas<input type="file" hidden onchange="up(\''+d[0]+'\',this)"></label></div>'}).join('');
+        if(S.s==5)b=s5();
+        h+='<div id="imk-body">'+b+'</div>'+(S.err?'<div class="alert alert-danger mt-3">'+S.err+'</div>':'')+
+        '<div class="d-flex justify-content-between mt-4"><button class="btn btn-light btn-lg" onclick="bk()"><i class="fas fa-arrow-left"></i> Kembali</button>'+
+        (S.s==5?'<button class="btn btn-primary btn-lg"'+(S.blk?' disabled':'')+' onclick="kirim()">Kirim Pengajuan</button>':'<button class="btn btn-primary btn-lg" onclick="nx()">Lanjut <i class="fas fa-arrow-right"></i></button>')+'</div>';
+        $i('imk-flow').innerHTML=h;
+        document.querySelectorAll('#imk-body [data-k]').forEach(function(x){x.value=S.f[x.dataset.k]||''})}
+
+    /* P4: status dan pencairan */
+    function tb(t){['status','cair'].forEach(function(x){$i('pane-'+x).style.display=x==t?'':'none';$i('tab-'+x).classList.toggle('active',x==t)})}
+    function rs(){
+        var a='',b='';
+        S.sent.concat(CT).forEach(function(r){
+            var s='<ol class="imk-steps mb-4">';
+            NS.forEach(function(n,i){s+='<li data-n="'+(i+1)+'" class="'+(i<r.st?'done':i==r.st?'active':'')+'"><span>'+n+'</span></li>'});s+='</ol>';
+            a+='<div class="card border shadow-none mb-4"><div class="card-body"><div class="d-flex justify-content-between flex-wrap mb-3"><div><h5 class="mb-1">'+B[r.id].t+'</h5><span class="text-muted small">No. '+r.no+' &middot; Dikirim '+r.tgl+(r.c?' (contoh)':'')+'</span></div><div><span class="badge badge-primary px-3 py-2">'+NS[r.st]+'</span></div></div>'+s+'<div class="alert alert-light border mb-0"><strong>Langkah berikutnya:</strong> '+NX[r.st]+'</div></div></div>';
+            b+='<tr><td>'+B[r.id].t+'</td><td>'+r.no+'</td><td>Akan diinformasikan oleh pengelola</td><td><span class="badge badge-'+(r.st>2?'success':'secondary')+'">'+(r.st<3?'Menunggu hasil seleksi':r.st==3?'Menunggu jadwal pencairan':'Dalam proses pencairan')+'</span></td></tr>'});
+        $i('imk-status').innerHTML=a;$i('imk-cair').innerHTML=b}
+
+    filterBeasiswa();
     </script>
     </body>
 </html>
