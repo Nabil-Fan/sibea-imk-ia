@@ -659,7 +659,10 @@
         if(S.s==2&&!S.li){
             if(S.mode=='masuk'?!(f.u&&f.pw):!(f.an&&f.ae&&f.pw))S.err='Lengkapi semua kolom untuk melanjutkan.';else S.li=true}
         if(!S.err)S.s++;rp()}
-
+    function up(k,i){sv();S.f[k]=i.files[0]?i.files[0].name:'';rp()}
+    function kirim(){
+        sv();S.sent.unshift({id:S.b,no:'SIBEA-'+S.b+'-'+String(Date.now()).slice(-5),tgl:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),st:0});
+        S.done=true;rp()}
     function s5(){
         var m=0,R=[['nama','Nama Lengkap',3],['nim','NIM',3],['prodi','Program Studi',3],['email','Email',3],['hp','Nomor HP',3],['d1','Kartu Tanda Mahasiswa (KTM)',4],['d2','Transkrip Nilai',4],['d3','Surat Keterangan Aktif Kuliah',4]],
         t='<h5>Periksa dan Kirim Pengajuan</h5><p class="text-muted">Pastikan semua data sudah benar sebelum dikirim.</p><table class="table table-sm"><tr><td class="text-muted">Beasiswa</td><td>'+B[S.b].t+'</td><td><a href="#" onclick="return jmp(1)">Ubah</a></td></tr>';
