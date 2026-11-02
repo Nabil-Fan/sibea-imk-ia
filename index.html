@@ -35,12 +35,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/dist/prism.css">
   <link rel="stylesheet" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/dist/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
   <link rel="stylesheet" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/dist/chocolat.css">
   <link rel="stylesheet" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/dist/style.css">
   <link rel="stylesheet" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/dist/custom.css">
-  <link rel="stylesheet" href="../node_modules/fullcalendar/dist/fullcalendar.min.css">
   <link rel="stylesheet" href="https://sibea.integrasi.uns.ac.id/dashboard/css/components.css">
   <link rel="stylesheet" type="text/css" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/landing/style.css?version=90">
   <link rel="stylesheet" type="text/css" href="https://sibea.integrasi.uns.ac.id/stislaLanding/css/landing/landing.css?version=90">
@@ -66,6 +66,166 @@
     .imk-opt{display:block;border:2px solid #e4e6fc;border-radius:8px;padding:12px 16px;margin-bottom:10px;cursor:pointer}
     .imk-opt.sel{border-color:#6777ef;background:#f6f7ff}
     @media(max-width:575px){.imk-steps li span{display:none}.imk-steps li.active span{display:block;position:absolute;left:0;right:0;top:40px}.imk-steps{margin-bottom:56px}}
+  </style>
+  <style>
+    .hero-sibea{
+        min-height: 880px;
+    }
+    .hero-sibea .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .sibea-search {
+      position: relative;
+      z-index: 3;
+      width: min(829px, 100%);
+      margin: 54px auto -100px;
+      text-align: left;
+    }
+
+    .sibea-search__bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      height: 63px;
+      padding: 0 16px 0 28px;
+      overflow: hidden;
+      border: 1px solid rgba(32, 35, 54, 0.12);
+      border-radius: 28.27px;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(20, 20, 60, 0.12);
+    }
+
+    .sibea-search__input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      padding: 0 12px 0 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #202336;
+      font: inherit;
+      font-size: 16px;
+    }
+
+    .sibea-search__input::placeholder {
+      color: #202336;
+      opacity: 1;
+    }
+
+    .sibea-search__submit {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #111;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .sibea-search__submit:focus-visible,
+    .sibea-search__suggestion:focus-visible {
+      outline: 2px solid #536dfe;
+      outline-offset: 2px;
+    }
+
+    .sibea-search__panel {
+      position: absolute;
+      top: calc(100% - 1px);
+      right: 0;
+      left: 0;
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      visibility: hidden;
+      transition: grid-template-rows 240ms ease, opacity 180ms ease, visibility 0s linear 240ms;
+    }
+
+    .sibea-search.is-open .sibea-search__panel {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .sibea-search__panel-inner {
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid #d6d9e8;
+      border-top: 0;
+      width: 95%;
+      justify-self: center;
+      border-radius: 0 0 8px 8px;
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(20, 20, 60, 0.1);
+    }
+
+    .sibea-search__suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 8px 14px 14px;
+    }
+
+    .sibea-search__suggestion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 5px 2px;
+      border: 0;
+      background: transparent;
+      color: #202020;
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .sibea-search__suggestion:hover {
+      color: #3432df;
+    }
+
+    .sibea-search__suggestion .bi {
+      flex: 0 0 auto;
+      font-size: 14px;
+    }
+
+    @media (max-width: 767.98px) {
+      .sibea-search {
+        margin-top: 36px;
+        margin-bottom: -80px;
+      }
+
+      .sibea-search__bar {
+        height: 58px;
+        padding-left: 20px;
+      }
+
+      .sibea-search__input {
+        font-size: 14px;
+      }
+
+      .sibea-search__suggestion {
+        font-size: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sibea-search__panel {
+        transition: none;
+      }
+    }
   </style>
 </head><title>SIBEA - Pendaftaran Beasiswa UNS</title>
 
@@ -163,12 +323,51 @@
                                 <h1 data-aos="fade-up" class="mt-3 mb-5">Selamat Datang di<br> <span id="text-type"></span></h1>
                 <p data-aos="fade-up" data-aos-delay="300" class="lead mb-5">Mendapatkan Beasiswa menjadi lebih mudah, untuk masa depan yang lebih cerah</p>
                 <div class="cta">
-                    <a data-aos="zoom-in" data-aos-delay="700" class="btn btn-lg btn-warning btn-icon icon-right" href="https://sibea.integrasi.uns.ac.id/daftar-beasiswa" >Daftar Sekarang</a>
-                    <a data-aos="zoom-in" data-aos-delay="700" class="btn btn-lg btn-secondary btn-icon icon-right" onclick="toPenawaran()" >Lihat Penawaran</a>
+                    <a data-aos="zoom-in" data-aos-delay="700" class="btn btn-lg btn-warning btn-icon icon-right" onclick="toPenawaran()" >Cari beasiswa</a>
                 </div>
             </div>
             <div class="col-lg-6 pl-lg-6 d-lg-block d-none text-center" data-aos="fade-up" data-aos-delay="1200">
                 <img src="https://sibea.integrasi.uns.ac.id/stislaLanding/img/landingpg.png" alt="image" class="img-fluid ml-3" width="100%">
+            </div>
+        </div>
+            <div class="sibea-search" id="sibea-search">
+                <form class="sibea-search__bar" role="search" aria-label="Cari layanan atau beasiswa">
+                    <input
+                        class="sibea-search__input"
+                        id="sibea-search-input"
+                        type="search"
+                        placeholder="Cari layanan atau beasiswa"
+                        autocomplete="off"
+                        aria-label="Cari layanan atau beasiswa"
+                        aria-controls="sibea-search-panel"
+                        aria-expanded="false">
+                    <button class="sibea-search__submit" type="submit" aria-label="Cari">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                    </button>
+                </form>
+                <div class="sibea-search__panel" id="sibea-search-panel">
+                    <div class="sibea-search__panel-inner">
+                        <div class="sibea-search__suggestions" aria-label="Layanan yang sering digunakan">
+                            <button class="sibea-search__suggestion" type="button">
+                                <span>Layanan yang sering digunakan?</span><i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                            <button class="sibea-search__suggestion" type="button">
+                                <span>Beasiswa yang sedang aktif?</span><i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                            <button class="sibea-search__suggestion" type="button">
+                                <span>Pengumuman status dan pencairan beasiswa</span><i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                            <button class="sibea-search__suggestion" type="button">
+                                <span>Pemberian Penghargaan bagi Pemuda Berprestasi Pemerintah Kabupaten Sukoharjo</span><i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                            <button class="sibea-search__suggestion" type="button">
+                                <span>Cara mendapatkan surat bebas beasiswa?</span><i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                            <button class="sibea-search__suggestion" type="button">
+                                <span>Beasiswa untuk sarjana</span><i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -584,6 +783,54 @@
         AOS.init();
     </script>
     <script>
+        (function () {
+            var search = document.getElementById('sibea-search');
+            var input = document.getElementById('sibea-search-input');
+            var form = search.querySelector('form');
+            var suggestions = search.querySelectorAll('.sibea-search__suggestion');
+
+            function setOpen(isOpen) {
+                search.classList.toggle('is-open', isOpen);
+                input.setAttribute('aria-expanded', String(isOpen));
+            }
+
+            input.addEventListener('focus', function () {
+                setOpen(true);
+            });
+
+            search.addEventListener('focusout', function () {
+                window.setTimeout(function () {
+                    setOpen(search.contains(document.activeElement));
+                }, 0);
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!search.contains(event.target)) {
+                    setOpen(false);
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+            });
+
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    setOpen(false);
+                    input.blur();
+                }
+            });
+
+            suggestions.forEach(function (suggestion) {
+                suggestion.addEventListener('click', function () {
+                    input.value = suggestion.querySelector('span').textContent;
+                    setOpen(false);
+                    input.blur();
+                });
+            });
+        }());
+    </script>
+    <script>
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
@@ -601,10 +848,10 @@
             const obj2 = document.getElementById("text-penerima");
             const obj3 = document.getElementById("text-penawaran");
             const obj4 = document.getElementById("text-kerjasama");
-            animateValue(obj1, 100, 5000, 5000);
-            animateValue(obj2, 100, 3000, 5000);
-            animateValue(obj3, 100, 300, 4500);
-            animateValue(obj4, 100, 150, 4500);
+            if (obj1) animateValue(obj1, 100, 5000, 5000);
+            if (obj2) animateValue(obj2, 100, 3000, 5000);
+            if (obj3) animateValue(obj3, 100, 300, 4500);
+            if (obj4) animateValue(obj4, 100, 150, 4500);
     </script>
     <script>
         function goTentang(){
